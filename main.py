@@ -1,5 +1,6 @@
 import pygame
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT
+from player import Player
 
 
 def main():
@@ -8,21 +9,30 @@ def main():
     print(f"Screen height: {SCREEN_HEIGHT}")
 
     pygame.init()
-    surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     timer = pygame.time.Clock()
-    gameloop(surface, timer)
+    gameloop(screen, timer)
 
 
-def gameloop(surface, timer, dt=0):
+def gameloop(screen, timer, dt=0):
+    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
 
-        # Draw stuff
+        # Update the world
+        player.update(dt)
 
-        # Call pygame.display.flip()
+        # Clear screen
+        screen.fill("black")
 
+        # Draw to the screen
+        player.draw(screen)
+        pygame.display.flip()
+
+        # Check delta-time
         dt = timer.tick(60) / 1000
 
 
