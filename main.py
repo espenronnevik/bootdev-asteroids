@@ -11,11 +11,17 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     timer = pygame.time.Clock()
-    gameloop(screen, timer)
+
+    groups = {"updatable": pygame.sprite.Group(), "drawable": pygame.sprite.Group()}
+
+    Player.containers = groups.values()
+    Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+
+    gameloop(screen, timer, groups)
 
 
-def gameloop(screen, timer, dt=0):
-    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+def gameloop(screen, timer, groups):
+    dt = 0
 
     while True:
         for event in pygame.event.get():
@@ -23,13 +29,16 @@ def gameloop(screen, timer, dt=0):
                 return
 
         # Update the world
-        player.update(dt)
+        for obj in groups["updatable"]:
+            obj.update(dt)
 
         # Clear screen
         screen.fill("black")
 
         # Draw to the screen
-        player.draw(screen)
+        for obj in groups["drawable"]:
+            obj.draw(screen)
+
         pygame.display.flip()
 
         # Check delta-time
