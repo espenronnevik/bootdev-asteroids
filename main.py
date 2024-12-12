@@ -21,10 +21,7 @@ def main():
 
     Player.containers = (updatable, drawable)
     Asteroid.containers = (updatable, drawable, asteroids)
-    AsteroidField.containers = updatable
-
-    Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
-    AsteroidField()
+    AsteroidField.containers = (updatable,)
 
     gameloop(
         screen,
@@ -34,6 +31,8 @@ def main():
 
 
 def gameloop(screen, timer, groups):
+    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+    AsteroidField()
     dt = 0
 
     while True:
@@ -44,6 +43,12 @@ def gameloop(screen, timer, groups):
         # Update the world
         for obj in groups["updatable"]:
             obj.update(dt)
+
+        # Check if player has collided with any asteroids
+        for asteroid in groups["asteriods"]:
+            if asteroid.is_colliding(player):
+                print("Game over!")
+                return
 
         # Clear screen
         screen.fill("black")
